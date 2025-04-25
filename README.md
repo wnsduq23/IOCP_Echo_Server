@@ -33,7 +33,7 @@ AcceptThread / WorkerThread / ReleaseThread를 생성하여 클라이언트 수�
 ---
 
 ## 폴더 구조
-
+<PRE>
 📦 IOCP-Echo-Server (ver2)
 ┣ 📂Core               # 공통 헤더 및 유틸
 ┃ ┣ 📜 pch.h
@@ -53,3 +53,4 @@ AcceptThread / WorkerThread / ReleaseThread를 생성하여 클라이언트 수�
 ┗ 📂Utils              # 로깅 등 공통 모듈
   ┣ 📜 SystemLog.h
   ┗ 📜 SystemLog.cpp
+</PRE>
