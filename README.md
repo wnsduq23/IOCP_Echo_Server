@@ -55,7 +55,6 @@ IOCP 기반의 Echo 서버입니다.
 1. **연결/해제 반복**  
    - 설정된 `Client Count` 만큼 접속 → `Disconnect Test=Yes` 상태에서 랜덤하게 서버 연결 해제 및 재접속
      
-   ![image](https://github.com/user-attachments/assets/ea76e741-84e0-4603-8afa-6d47439a1d1f)
 
 2. **데이터 무결성 검증**  
    - 각 클라이언트 세션마다 8바이트 고유 증가 값 전송  
