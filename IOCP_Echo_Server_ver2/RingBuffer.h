@@ -51,7 +51,7 @@ public:
     {
         if (size > _useSize)
         {
-            LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+            LOG(L"IOCP", SystemLog::ERROR_LEVEL,
                 L"%s[%d]: used size %d < req size %d\n",
                 _T(__FUNCTION__), __LINE__, _useSize, size);
 
@@ -81,7 +81,7 @@ public:
     {
         if (size > MAX_BUF_SIZE)
         {
-            LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+            LOG(L"IOCP", SystemLog::ERROR_LEVEL,
                 L"%s[%d] req %d, max %d",
                 _T(__FUNCTION__), __LINE__, size, MAX_BUF_SIZE);
 
@@ -94,7 +94,7 @@ public:
         {
             if (!Resize(_bufferSize + (int)(size * 1.5f)))
             {
-                LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+                LOG(L"IOCP", SystemLog::ERROR_LEVEL,
                     L"%s[%d] Fail to Resize",
                     _T(__FUNCTION__), __LINE__);
 
@@ -129,7 +129,7 @@ public:
     {
         if (size > _useSize)
         {
-            LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+            LOG(L"IOCP", SystemLog::ERROR_LEVEL,
                 L"%s[%d]: used size %d, req size %d\n",
                 _T(__FUNCTION__), __LINE__, _useSize, size);
 
@@ -163,7 +163,7 @@ public:
     {
         if (size > _useSize)
         {
-            LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+            LOG(L"IOCP", SystemLog::ERROR_LEVEL,
                 L"%s[%d]: used size %d, req size %d\n",
                 _T(__FUNCTION__), __LINE__, _useSize, size);
 
@@ -184,7 +184,7 @@ public:
     {
         if (size > MAX_BUF_SIZE)
         {
-            LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+            LOG(L"IOCP", SystemLog::ERROR_LEVEL,
                 L"%s[%d] req %d, max %d",
                 _T(__FUNCTION__), __LINE__, size, MAX_BUF_SIZE);
             ::wprintf(L"%s[%d] req %d, max %d",
@@ -196,7 +196,7 @@ public:
         {
             if (!Resize(_bufferSize + (int)(size * 1.5f)))
             {
-                LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+                LOG(L"IOCP", SystemLog::ERROR_LEVEL,
                     L"%s[%d] Fail to Resize",
                     _T(__FUNCTION__), __LINE__);
                 ::wprintf(L"%s[%d] Fail to Resize",
@@ -253,14 +253,14 @@ public:
 
     inline bool Resize(int size)
     {
-        LOG(L"FightGame", SystemLog::DEBUG_LEVEL,
+        LOG(L"IOCP", SystemLog::DEBUG_LEVEL,
             L"%s[%d] Resize\n", _T(__FUNCTION__), __LINE__);
 
         ::wprintf(L"%s[%d] Resize\n", _T(__FUNCTION__), __LINE__);
 
         if (size > MAX_BUF_SIZE)
         {
-            LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+            LOG(L"IOCP", SystemLog::ERROR_LEVEL,
                 L"%s[%d]: req %d, max %d\n",
                 _T(__FUNCTION__), __LINE__, size, MAX_BUF_SIZE);
 
@@ -272,7 +272,7 @@ public:
 
         if (size < _useSize)
         {
-            LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+            LOG(L"IOCP", SystemLog::ERROR_LEVEL,
                 L"%s[%d]: used size %d, req size %d\n",
                 _T(__FUNCTION__), __LINE__, _useSize, size);
 

@@ -47,7 +47,7 @@ public:
 	{
 		if (bufferSize > eBUFFER_MAX)
 		{
-			LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+			LOG(L"IOCP", SystemLog::ERROR_LEVEL,
 				L"%s[%d]: req %d max %d\n",
 				_T(__FUNCTION__), __LINE__, bufferSize, eBUFFER_MAX);
 
@@ -124,7 +124,7 @@ public:
 	{
 		if (_writePos - _readPos < sizeof(float))
 		{
-			LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+			LOG(L"IOCP", SystemLog::ERROR_LEVEL,
 				L"%s[%d]: used size %d < req size: %llu\n",
 				_T(__FUNCTION__), __LINE__, _writePos - _readPos, sizeof(float));
 
@@ -145,7 +145,7 @@ public:
 	{
 		if (_writePos - _readPos < sizeof(double))
 		{
-			LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+			LOG(L"IOCP", SystemLog::ERROR_LEVEL,
 				L"%s[%d]: used size %d < req size: %llu\n",
 				_T(__FUNCTION__), __LINE__, _writePos - _readPos, sizeof(double));
 
@@ -283,7 +283,7 @@ public:
 	{
 		if (_writePos - _readPos < sizeof(char))
 		{
-			LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+			LOG(L"IOCP", SystemLog::ERROR_LEVEL,
 				L"%s[%d]: used size %d < req size: %llu\n",
 				_T(__FUNCTION__), __LINE__, _writePos - _readPos, sizeof(char));
 
@@ -304,7 +304,7 @@ public:
 	{
 		if (_writePos - _readPos < sizeof(BYTE))
 		{
-			LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+			LOG(L"IOCP", SystemLog::ERROR_LEVEL,
 				L"%s[%d]: used size %d < req size: %llu\n",
 				_T(__FUNCTION__), __LINE__, _writePos - _readPos, sizeof(BYTE));
 
@@ -325,7 +325,7 @@ public:
 	{
 		if (_writePos - _readPos < sizeof(wchar_t))
 		{
-			LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+			LOG(L"IOCP", SystemLog::ERROR_LEVEL,
 				L"%s[%d]: used size %d < req size: %llu\n",
 				_T(__FUNCTION__), __LINE__, _writePos - _readPos, sizeof(wchar_t));
 
@@ -346,7 +346,7 @@ public:
 	{
 		if (_writePos - _readPos < sizeof(short))
 		{
-			LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+			LOG(L"IOCP", SystemLog::ERROR_LEVEL,
 				L"%s[%d]: used size %d < req size: %llu\n",
 				_T(__FUNCTION__), __LINE__, _writePos - _readPos, sizeof(short));
 
@@ -367,7 +367,7 @@ public:
 	{
 		if (_writePos - _readPos < sizeof(WORD))
 		{
-			LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+			LOG(L"IOCP", SystemLog::ERROR_LEVEL,
 				L"%s[%d]: used size %d < req size: %llu\n",
 				_T(__FUNCTION__), __LINE__, _writePos - _readPos, sizeof(WORD));
 
@@ -388,7 +388,7 @@ public:
 	{
 		if (_writePos - _readPos < sizeof(int))
 		{
-			LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+			LOG(L"IOCP", SystemLog::ERROR_LEVEL,
 				L"%s[%d]: used size %d < req size: %llu\n",
 				_T(__FUNCTION__), __LINE__, _writePos - _readPos, sizeof(int));
 
@@ -409,7 +409,7 @@ public:
 	{
 		if (_writePos - _readPos < sizeof(DWORD))
 		{
-			LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+			LOG(L"IOCP", SystemLog::ERROR_LEVEL,
 				L"%s[%d]: used size %d < req size: %llu\n",
 				_T(__FUNCTION__), __LINE__, _writePos - _readPos, sizeof(DWORD));
 
@@ -430,7 +430,7 @@ public:
 	{
 		if (_writePos - _readPos < sizeof(__int64))
 		{
-			LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+			LOG(L"IOCP", SystemLog::ERROR_LEVEL,
 				L"%s[%d]: used size %d < req size: %llu\n",
 				_T(__FUNCTION__), __LINE__, _writePos - _readPos, sizeof(__int64));
 
@@ -451,7 +451,7 @@ public:
 	{
 		if (_writePos - _readPos < sizeof(UINT64))
 		{
-			LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+			LOG(L"IOCP", SystemLog::ERROR_LEVEL,
 				L"%s[%d]: used size %d < req size: %llu\n",
 				_T(__FUNCTION__), __LINE__, _writePos - _readPos, sizeof(UINT64));
 
@@ -472,7 +472,7 @@ public:
 	{
 		if (_writePos - _readPos < size)
 		{
-			LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+			LOG(L"IOCP", SystemLog::ERROR_LEVEL,
 				L"%s[%d]: used size %d < req size: %llu\n",
 				_T(__FUNCTION__), __LINE__, _writePos - _readPos, size);
 
@@ -492,7 +492,7 @@ public:
 	{
 		if (_writePos - _readPos < size)
 		{
-			LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+			LOG(L"IOCP", SystemLog::ERROR_LEVEL,
 				L"%s[%d]: used size %d < req size: %llu\n",
 				_T(__FUNCTION__), __LINE__, _writePos - _readPos, size);
 
@@ -510,7 +510,7 @@ public:
 	{
 		if (_writePos - _readPos < size)
 		{
-			LOG(L"FightGame", SystemLog::ERROR_LEVEL,
+			LOG(L"IOCP", SystemLog::ERROR_LEVEL,
 				L"%s[%d]: used size %d < req size: %llu\n",
 				_T(__FUNCTION__), __LINE__, _writePos - _readPos, size);
 

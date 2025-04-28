@@ -10,7 +10,7 @@ bool g_bShutdown = false;
 int main()
 {
 	SYSLOG_DIRECTORY(L"SystemLog");
-	LOG(L"IOCP Echo Server", SystemLog::SYSTEM_LEVEL, L"%s", L"Main Thread Start\n");
+	LOG(L"IOCP", SystemLog::SYSTEM_LEVEL, L"%s", L"Main Thread Start\n");
 	// 서버 인스턴스 생성
 	g_Server = new CEchoServer;
 
