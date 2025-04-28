@@ -4,7 +4,7 @@
 #include "Main.h"
 
 int cnt = 0;
-bool CLanServer::Start(const CHAR* openIP, const USHORT port, USHORT createWorkerThreadCount, USHORT maxWorkerThreadCount, INT maxClientCount)
+bool CLanServer::Start(const CHAR* openIP, const USHORT port, USHORT createWorkerThreadCount, USHORT maxWorkerThreadCount, ULONG maxClientCount)
 {
 	InitializeSession(maxClientCount);
 
@@ -148,7 +148,7 @@ unsigned int WINAPI CLanServer::AcceptThread(void* arg)
 		{
 			// 세션 최대치 초과 - 접속 거절
 			closesocket(client_sock);  // 연결 끊기
-			::wprintf(L"[SYSTEM] MaxClientCount 초과! 접속 거절\n");
+			::wprintf(L"[SYSTEM] MaxClientCount 초과! \n");
 			continue;  // 다음 클라이언트 대기
 		}
 
@@ -162,14 +162,14 @@ unsigned int WINAPI CLanServer::AcceptThread(void* arg)
 		}
 
 		AcquireSRWLockExclusive(&g_Server->m_usableIdxStackLock);
-		USHORT index = g_Server->m_usableIdxStack.back();
+		ULONG index = g_Server->m_usableIdxStack.back();
 		g_Server->m_usableIdxStack.pop_back();
 		ReleaseSRWLockExclusive(&g_Server->m_usableIdxStackLock);
 
 		// Create Session
 		__int64 sessionId = g_Server->m_sessionIDSupplier++;
 		__int64 id = g_Server->CombineIndex(index, sessionId);
-		USHORT cindex = g_Server->GetSessionIndex(id);
+		ULONG cindex = g_Server->GetSessionIndex(id);
 		__int64 csid = g_Server->GetSessionID(id);
 
 		//Session *pSession = Session::Alloc();
@@ -187,7 +187,7 @@ unsigned int WINAPI CLanServer::AcceptThread(void* arg)
 
 		// Connect Session to IOCP and Post Recv
 		CreateIoCompletionPort((HANDLE)pSession->m_ClientSock,
-			g_Server->m_hNetworkCP, (ULONG_PTR)pSession, 0);
+			g_Server->m_hNetworkCP, (ULONG_PTR)pSession, 0); // 주의
 
 		g_Server->OnAccept(id);
 		//::printf("Accept New Session (ID: %lld)\n", g_Server->GetSessionID(pSession->m_SessionID));
@@ -197,7 +197,7 @@ unsigned int WINAPI CLanServer::AcceptThread(void* arg)
 		pSession->RecvPost();
 
 		//if (InterlockedDecrement(&pSession->m_IOCount) == 0)
-		//	PostQueuedCompletionStatus(g_Server->m_hReleaseCP, 0, (ULONG_PTR)pSession, 0);
+		//	PostQueuedCompletionStatus(g_Server->m_hReleaseCP, 0, (ULONG_PTR)pSession, 0); // 주의
 	}
 
 	::printf("Accept Thread Terminate (ID: %d)\n", GetCurrentThreadId());
@@ -217,11 +217,8 @@ unsigned int WINAPI CLanServer::WorkerThread(void* arg)
 		NetworkOverlapped* pNetOvl = 0;
 		//__debugbreak();
 		int GQCSRet = GetQueuedCompletionStatus(hNetworkCP, &dwTransferred,
-			(PULONG_PTR)&pSession, (LPOVERLAPPED*)&pNetOvl, INFINITE);
+			(PULONG_PTR)&pSession, (LPOVERLAPPED*)&pNetOvl, INFINITE); // 주의
 
-		cnt++;
-		if (cnt % 100000 == 0)
-			printf("[WorkerThread] GQCS awaken: %d times\n", cnt);
 		if (g_bShutdown) break;
 
 		// Check Exception
@@ -272,7 +269,7 @@ unsigned int WINAPI CLanServer::WorkerThread(void* arg)
 		if (InterlockedDecrement(&pSession->m_IOCount) == 0)
 		{
 			PostQueuedCompletionStatus(
-				g_Server->m_hReleaseCP, 0, (ULONG_PTR)pSession, 0);
+				g_Server->m_hReleaseCP, 0, (ULONG_PTR)pSession, 0); // 주의!
 		}
 	}
 
@@ -292,11 +289,11 @@ unsigned int WINAPI CLanServer::ReleaseThread(void* arg)
 		OVERLAPPED* pOvl = nullptr;
 
 		int GQCSRet = GetQueuedCompletionStatus(hReleaseCP, &cbTransferred,
-			(PULONG_PTR)&pSession, &pOvl, INFINITE);
+			(PULONG_PTR)&pSession, &pOvl, INFINITE); // 이거 ULONG -> USHORT 바뀌는거 주의
 
 		if (g_bShutdown) break;
 
-		USHORT index = g_Server->GetSessionIndex(pSession->m_SessionID);
+		ULONG index = g_Server->GetSessionIndex(pSession->m_SessionID);
 
 		closesocket(pSession->m_ClientSock);
 		__int64 ID = g_Server->GetSessionID(pSession->m_SessionID);
@@ -321,7 +318,7 @@ unsigned int WINAPI CLanServer::ReleaseThread(void* arg)
 
 void CLanServer::SendPacket(const __int64 sessionId, SerializePacket * sPacket)
 {
-	USHORT idx = GetSessionIndex(sessionId);
+	ULONG idx = GetSessionIndex(sessionId);
 	Session* pSession = m_pArrSession[idx];
 	pSession->SendPacketQueue(sPacket);
 }

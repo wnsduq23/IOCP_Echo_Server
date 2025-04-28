@@ -9,10 +9,12 @@ CLanServer* g_Server;
 bool g_bShutdown = false;
 int main()
 {
+	SYSLOG_DIRECTORY(L"SystemLog");
+	LOG(L"IOCP Echo Server", SystemLog::SYSTEM_LEVEL, L"%s", L"Main Thread Start\n");
 	// 서버 인스턴스 생성
 	g_Server = new CEchoServer;
 
-	g_Server->Start(SERVER_IP, SERVER_PORT, 8, 8, 65535);
+	g_Server->Start(SERVER_IP, SERVER_PORT, 8, 8, 10000000);
 	// 서버 실행 중 (g_bShutdown이 true가 될 때까지 루프)
 	while (!g_bShutdown)
 	{

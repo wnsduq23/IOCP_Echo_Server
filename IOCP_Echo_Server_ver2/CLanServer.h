@@ -1,14 +1,16 @@
 #pragma once
 
 
-#define SESSION_INDEX_MASK	0xffff000000000000
-#define SESSION_ID_MASK		0x0000ffffffffffff
+//#define SESSION_INDEX_MASK	0xffff000000000000
+//#define SESSION_ID_MASK		0x0000ffffffffffff
 
+#define SESSION_INDEX_MASK 0xffffffff00000000
+#define SESSION_ID_MASK    0x00000000ffffffff
 
 class CLanServer
 {
 public:
-	bool Start(const CHAR* openIP, const USHORT port, USHORT createWorkerThreadCount, USHORT maxWorkerThreadCount, INT maxClientCount);
+	bool Start(const CHAR* openIP, const USHORT port, USHORT createWorkerThreadCount, USHORT maxWorkerThreadCount, ULONG maxClientCount);
 	// void Stop();
 	inline int GetSessionCount() { return m_ClientCount; }
 
@@ -29,7 +31,7 @@ public:
 
 //디버깅 후 private:으로 변경바람
 public:
-	void InitializeSession(USHORT maxClientCount)
+	void InitializeSession(ULONG maxClientCount)
 	{
 		InitializeSRWLock(&m_usableIdxStackLock);
 
@@ -43,13 +45,13 @@ public:
 		}
 		ReleaseSRWLockExclusive(&m_usableIdxStackLock);
 	}
-	USHORT GetSessionIndex(__int64 SessionId)
+	ULONG GetSessionIndex(__int64 SessionId)
 	{
 		__int64 p64 = SessionId;
 		// 상위 2바이트 꺼내기
 		__int64 maskP64 = p64 & SESSION_INDEX_MASK;
-		maskP64 = maskP64 >> 48;
-		return (USHORT)maskP64;
+		maskP64 = maskP64 >> 32;
+		return (ULONG)maskP64;
 	}
 
 	__int64 GetSessionID(__int64 SessionId)
@@ -58,11 +60,11 @@ public:
 		return (__int64)maskP64;
 	}
 
-	__int64 CombineIndex(USHORT stackIndex, __int64 Index)
+	__int64 CombineIndex(ULONG stackIndex, __int64 Index)
 	{
 		__int64 p64 = Index;
 		__int64 index64 = stackIndex;
-		index64 = index64 << 48;
+		index64 = index64 << 32;
 		return (p64 | index64);
 	}
 
@@ -87,13 +89,13 @@ private:
 	LONG m_SendMsgTPS = 0;
 
 	// 최대 Session 수
-	USHORT m_MaxSessionCount; // 2바이트 사용 최대 65535
+	ULONG m_MaxSessionCount; // 2바이트 사용 최대 65535
 public: 
 	// 서버에 접속 성공한 세션들을 관리하고 있는 배열
 	Session* m_pArrSession[MAX_SESSION_CNT]; 
 
 	// 사용 할 수 있는 세션들 모음 (e.g. 재사용 등등)
-	std::vector<USHORT> m_usableIdxStack;
+	std::vector<ULONG> m_usableIdxStack;
 	SRWLOCK m_usableIdxStackLock;
 
 };
