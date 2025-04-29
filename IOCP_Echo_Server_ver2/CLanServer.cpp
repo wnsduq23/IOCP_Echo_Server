@@ -4,6 +4,7 @@
 #include "Main.h"
 
 int cnt = 0;
+
 bool CLanServer::Start(const CHAR* openIP, const USHORT port, USHORT createWorkerThreadCount, USHORT maxWorkerThreadCount, ULONG maxClientCount)
 {
 	InitializeSession(maxClientCount);
@@ -249,8 +250,8 @@ unsigned int WINAPI CLanServer::WorkerThread(void* arg)
 		}
 		else if (dwTransferred == 0)
 		{
-			//Disconnect(pSession);
-			continue;
+			InterlockedExchange(&pSession->m_IsValid, FALSE);
+			//continue;
 		}
 		// Recv
 		else if (pNetOvl->_type == NET_TYPE::RECV)
@@ -258,7 +259,6 @@ unsigned int WINAPI CLanServer::WorkerThread(void* arg)
 			pSession->HandleRecvCP(dwTransferred);
 			//::printf("%lld: Complete Recv %d bytes (thread: %d)\n", g_Server->GetSessionID(pSession->m_SessionID), dwTransferred, threadID);
 		}
-
 		// Send 
 		else if (pNetOvl->_type == NET_TYPE::SEND)
 		{
@@ -310,7 +310,7 @@ unsigned int WINAPI CLanServer::ReleaseThread(void* arg)
 		// Session::Free(pSession); 으로 교체
 		delete(pSession);
 
-		::printf("Disconnect Client (ID: %lld) (thread: %d)\n", ID, GetCurrentThreadId());
+		//::printf("Disconnect Client (ID: %lld) (thread: %d)\n", ID, GetCurrentThreadId());
 		AcquireSRWLockExclusive(&g_Server->m_usableIdxStackLock);
 		g_Server->m_usableIdxStack.push_back(index);
 		ReleaseSRWLockExclusive(&g_Server->m_usableIdxStackLock);
@@ -326,6 +326,7 @@ void CLanServer::SendPacket(const __int64 sessionId, SerializePacket * sPacket)
 	Session* pSession = m_pArrSession[idx];
 	pSession->SendPacketQueue(sPacket);
 }
+
 void CLanServer::Monitor()
 {
 	m_AcceptTPS = 0;

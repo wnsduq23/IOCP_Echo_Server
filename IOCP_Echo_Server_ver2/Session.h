@@ -18,8 +18,8 @@ class Session
 public:
     // 생성자: session ID, 소켓, 클라이언트 주소 전달
     Session(__int64 ID, SOCKET sock, SOCKADDR_IN addr)
-        : m_SessionID(ID), m_ClientSock(sock), m_ClientAddr(addr), m_RecvBuf(MAX_BUFFER_SIZE), m_SendBuf(MAX_BUFFER_SIZE),
-        m_IOCount(0), m_SendFlag(0)
+        : m_SessionID(ID), m_ClientSock(sock), m_ClientAddr(addr), m_RecvBuf(), m_SendBuf(),
+        m_IOCount(0), m_SendFlag(0), m_IsValid(TRUE)
     {
 		InitializeCriticalSection(&_cs);
         ZeroMemory(&_recvOvl, sizeof(_recvOvl));
@@ -64,6 +64,7 @@ public:
 		//m_SendCount = 0;
 		m_SendBuf.ClearBuffer();
 		m_RecvBuf.ClearBuffer();
+        InterlockedExchange(&m_IsValid, TRUE);
 	}
 
 	void Clear()
@@ -76,6 +77,8 @@ public:
 
 		m_RecvBuf.ClearBuffer();
 		m_SendBuf.ClearBuffer();
+
+        InterlockedExchange(&m_IsValid, FALSE);
 	}
 
     // Public 멤버 변수 (실제 프로젝트에서는 캡슐화를 고려해 getter/setter 사용)
@@ -100,6 +103,7 @@ public:
     // 이를 IOCount의 역할을 확장해야할 필요가 있음.
     volatile LONG m_IOCount = 0;
     volatile LONG m_SendFlag = 0;
+    volatile LONG m_IsValid = 0; // 세션의 핸들 함수 못 들어가게
 
     // 추가적으로 필요한 함수들은 여기 선언
     CRITICAL_SECTION _cs;

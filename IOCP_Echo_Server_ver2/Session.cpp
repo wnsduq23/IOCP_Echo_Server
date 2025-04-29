@@ -7,6 +7,9 @@
 
 void Session::HandleRecvCP(int recvBytes)
 {
+	if (m_IsValid == 0)
+		return;
+
 	EnterCriticalSection(&_cs);
 	// 링 버퍼 스레드 동기화 문제 없는 지 확인 바람 
 	int moveReadRet = m_RecvBuf.MoveWritePos(recvBytes);
@@ -104,6 +107,9 @@ void Session::SendPacketQueue(SerializePacket* packet)
 
 void Session::HandleSendCP(int sendBytes)
 {
+	if (m_IsValid == 0)
+		return;
+
 	EnterCriticalSection(&_cs);
 	int moveReadRet = m_SendBuf.MoveReadPos(sendBytes);
 	if (moveReadRet != sendBytes)
@@ -120,7 +126,7 @@ void Session::HandleSendCP(int sendBytes)
         SendPost();
         return;
     }
-    m_SendFlag = 0;  // 버퍼 비었을 때만 플래그 클리어
+    InterlockedDecrement(&m_SendFlag);  // 버퍼 비었을 때만 플래그 클리어
 	LeaveCriticalSection(&_cs);
 
 	//보낼 게 아직 남았다는 뜻
