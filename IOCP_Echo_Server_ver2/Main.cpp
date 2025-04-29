@@ -19,9 +19,9 @@ int main()
 	while (!g_bShutdown)
 	{
 		Sleep(1000);
-		if (GetAsyncKeyState(VK_ESCAPE))
+		//if (GetAsyncKeyState(VK_ESCAPE))
 		{
-			g_bShutdown = true;
+		//	g_bShutdown = true;
 		}
 	}
 	printf("서버 종료\n");

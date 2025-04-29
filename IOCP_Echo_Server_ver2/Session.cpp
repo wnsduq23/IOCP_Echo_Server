@@ -113,13 +113,21 @@ void Session::HandleSendCP(int sendBytes)
 		LeaveCriticalSection(&_cs);
 		return;
 	}
+
+	if (m_SendBuf.GetUseSize() > 0) {
+        // 다음 데이터가 남아 있으면 바로 전송
+        LeaveCriticalSection(&_cs);
+        SendPost();
+        return;
+    }
+    m_SendFlag = 0;  // 버퍼 비었을 때만 플래그 클리어
 	LeaveCriticalSection(&_cs);
 
 	//보낼 게 아직 남았다는 뜻
 	//::printf("(%s)(thread: %d)%d : %d\n", __func__, GetCurrentThreadId(), m_SessionID, m_SendFlag);
-	if (InterlockedDecrement(&m_SendFlag) != 0)
+	//if (InterlockedDecrement(&m_SendFlag) != 0)
 	{
-		SendPost();
+	//	SendPost();
 	}
 }
 
@@ -136,7 +144,7 @@ void Session::RecvPost()
 	_wsaRecvbuf[1].buf = m_RecvBuf.GetBufferFrontPtr();
 	_wsaRecvbuf[1].len = freeSize - _wsaRecvbuf[0].len;
 
-	ZeroMemory(&_recvOvl._ovl, sizeof(_recvOvl._ovl)); // 난 이거 생각 못했을 듯... 무조건 해야하나?
+	ZeroMemory(&_recvOvl._ovl, sizeof(_recvOvl._ovl));
 	InterlockedIncrement(&m_IOCount);
 
 	_recvOvl._type = NET_TYPE::RECV;
@@ -153,6 +161,7 @@ void Session::RecvPost()
 			if (err != WSAECONNRESET)
 			{
 				::printf("Error! %s(%d): %d\n", __func__, __LINE__, err);
+				LOG(L"IOCP", SystemLog::ERROR_LEVEL, L"Error %s(%d):%d", __func__, __LINE__, err);
 			}
 			InterlockedDecrement(&m_IOCount);
 			LeaveCriticalSection(&_cs);
@@ -192,6 +201,7 @@ void Session::SendPost()
 			if (err != WSAECONNRESET)
 			{
 				::printf("Error! %s(%d): %d\n", __func__, __LINE__, err);
+				LOG(L"IOCP", SystemLog::ERROR_LEVEL, L"Error %s(%d):%d", __func__, __LINE__, err);
 			}
 			InterlockedDecrement(&m_IOCount);
 			LeaveCriticalSection(&_cs);

@@ -21,17 +21,6 @@ bool CLanServer::Start(const CHAR* openIP, const USHORT port, USHORT createWorke
 		return false;
 	}
 
-	LINGER optval;
-	optval.l_onoff = 1;
-	optval.l_linger = 0;
-	int optRet = setsockopt(m_listenSock, SOL_SOCKET, SO_LINGER,
-		(char*)&optval, sizeof(optval));
-	if (optRet == SOCKET_ERROR)
-	{
-		::printf("Error! %s(%d)\n", __func__, __LINE__);
-		g_bShutdown = true;
-		return false;
-	}
 	/*
 	* 나중에 lockfree 큐 만들고 나면, tcp 패킷을 큐에 그대로 넣어버리기 위해
 	*/
@@ -133,8 +122,23 @@ unsigned int WINAPI CLanServer::AcceptThread(void* arg)
 
 		if (g_bShutdown) break;
 
+		LINGER optval;
+		optval.l_onoff = 1;
+		optval.l_linger = 0;
+		int optRet = setsockopt(client_sock, SOL_SOCKET, SO_LINGER,
+			(char*)&optval, sizeof(optval));
+		if (optRet == SOCKET_ERROR)
+		{
+			::printf("Error! %s(%d)\n", __func__, __LINE__);
+			g_bShutdown = true;
+			return false;
+		}
+
 		if (client_sock == INVALID_SOCKET)
 		{
+			int err = WSAGetLastError();
+			// err 값을 찍어서 정확한 원인을 확인
+			printf("accept failed, WSAGetLastError = %d\n", err);
 			::printf("Error! %s(%d)\n", __func__, __LINE__);
 			__debugbreak();
 		}
