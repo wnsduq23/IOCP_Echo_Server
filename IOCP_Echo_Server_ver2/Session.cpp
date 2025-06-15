@@ -128,12 +128,6 @@ void Session::HandleSendCP(int sendBytes)
     InterlockedDecrement(&m_SendFlag);  // 버퍼 비었을 때만 플래그 클리어
 	LeaveCriticalSection(&_cs);
 
-	//보낼 게 아직 남았다는 뜻
-	//::printf("(%s)(thread: %d)%d : %d\n", __func__, GetCurrentThreadId(), m_SessionID, m_SendFlag);
-	//if (InterlockedDecrement(&m_SendFlag) != 0)
-	{
-	//	SendPost();
-	}
 }
 
 // recv I/O 요청해서 IOCP 큐에 완료 통지 들어가게

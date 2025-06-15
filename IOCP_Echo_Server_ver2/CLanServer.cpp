@@ -197,12 +197,9 @@ unsigned int WINAPI CLanServer::AcceptThread(void* arg)
 		g_Server->OnAccept(id);
 		//::printf("Accept New Session (ID: %lld)\n", g_Server->GetSessionID(pSession->m_SessionID));
 
-		//InterlockedIncrement(&pSession->m_IOCount);
 		// recv를 미리 등록해둔다.
 		pSession->RecvPost();
 
-		//if (InterlockedDecrement(&pSession->m_IOCount) == 0)
-		//	PostQueuedCompletionStatus(g_Server->m_hReleaseCP, 0, (ULONG_PTR)pSession, 0); // 주의
 	}
 
 	::printf("Accept Thread Terminate (ID: %d)\n", GetCurrentThreadId());
@@ -293,8 +290,7 @@ unsigned int WINAPI CLanServer::ReleaseThread(void* arg)
 		OVERLAPPED* pOvl = nullptr;
 
 		int GQCSRet = GetQueuedCompletionStatus(hReleaseCP, &cbTransferred,
-			(PULONG_PTR)&pSession, &pOvl, INFINITE); // 이거 ULONG -> USHORT 바뀌는거 주의
-
+			(PULONG_PTR)&pSession, &pOvl, INFINITE);
 		if (g_bShutdown) break;
 
 		ULONG index = g_Server->GetSessionIndex(pSession->m_SessionID);
