@@ -11,7 +11,6 @@ void Session::HandleRecvCP(int recvBytes)
 		return;
 
 	EnterCriticalSection(&_cs);
-	// 링 버퍼 스레드 동기화 문제 없는 지 확인 바람 
 	int moveReadRet = m_RecvBuf.MoveWritePos(recvBytes);
 	if (moveReadRet != recvBytes)
 	{

@@ -192,7 +192,7 @@ unsigned int WINAPI CLanServer::AcceptThread(void* arg)
 
 		// Connect Session to IOCP and Post Recv
 		CreateIoCompletionPort((HANDLE)pSession->m_ClientSock,
-			g_Server->m_hNetworkCP, (ULONG_PTR)pSession, 0); // 주의
+			g_Server->m_hNetworkCP, (ULONG_PTR)pSession, 0);
 
 		g_Server->OnAccept(id);
 		//::printf("Accept New Session (ID: %lld)\n", g_Server->GetSessionID(pSession->m_SessionID));
@@ -222,7 +222,7 @@ unsigned int WINAPI CLanServer::WorkerThread(void* arg)
 		NetworkOverlapped* pNetOvl = 0;
 		//__debugbreak();
 		int GQCSRet = GetQueuedCompletionStatus(hNetworkCP, &dwTransferred,
-			(PULONG_PTR)&pSession, (LPOVERLAPPED*)&pNetOvl, INFINITE); // 주의
+			(PULONG_PTR)&pSession, (LPOVERLAPPED*)&pNetOvl, INFINITE);
 
 		if (g_bShutdown) break;
 
@@ -251,7 +251,7 @@ unsigned int WINAPI CLanServer::WorkerThread(void* arg)
 		else if (dwTransferred == 0)
 		{
 			InterlockedExchange(&pSession->m_IsValid, FALSE);
-			//continue;
+			continue;
 		}
 		// Recv
 		else if (pNetOvl->_type == NET_TYPE::RECV)
@@ -273,7 +273,7 @@ unsigned int WINAPI CLanServer::WorkerThread(void* arg)
 		if (InterlockedDecrement(&pSession->m_IOCount) == 0)
 		{
 			PostQueuedCompletionStatus(
-				g_Server->m_hReleaseCP, 0, (ULONG_PTR)pSession, 0); // 주의!
+				g_Server->m_hReleaseCP, 0, (ULONG_PTR)pSession, 0);
 		}
 	}
 

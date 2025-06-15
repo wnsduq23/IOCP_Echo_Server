@@ -48,7 +48,7 @@ public:
 	ULONG GetSessionIndex(__int64 SessionId)
 	{
 		__int64 p64 = SessionId;
-		// 상위 2바이트 꺼내기
+		// 상위 4바이트 꺼내기
 		__int64 maskP64 = p64 & SESSION_INDEX_MASK;
 		maskP64 = maskP64 >> 32;
 		return (ULONG)maskP64;
