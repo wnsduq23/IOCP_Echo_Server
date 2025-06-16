@@ -248,7 +248,7 @@ unsigned int WINAPI CLanServer::WorkerThread(void* arg)
 		else if (dwTransferred == 0)
 		{
 			InterlockedExchange(&pSession->m_IsValid, FALSE);
-			continue;
+			//continue;
 		}
 		// Recv
 		else if (pNetOvl->_type == NET_TYPE::RECV)
