@@ -223,6 +223,12 @@ unsigned int WINAPI CLanServer::WorkerThread(void* arg)
 
 		if (g_bShutdown) break;
 
+		if (dwTransferred == 0 && pSession == 0)
+		{
+			// 정상 종료 루틴
+			PostQueuedCompletionStatus(hNetworkCP, 0, 0, 0);
+			break;
+		}
 		// Check Exception
 		if (pNetOvl == nullptr)
 		{
@@ -238,12 +244,6 @@ unsigned int WINAPI CLanServer::WorkerThread(void* arg)
 				break;
 			}
 
-			if (dwTransferred == 0 && pSession == 0)
-			{
-				// 정상 종료 루틴
-				PostQueuedCompletionStatus(hNetworkCP, 0, 0, 0);
-				break;
-			}
 		}
 		else if (dwTransferred == 0)
 		{
