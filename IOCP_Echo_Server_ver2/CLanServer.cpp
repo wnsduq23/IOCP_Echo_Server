@@ -299,8 +299,8 @@ unsigned int WINAPI CLanServer::ReleaseThread(void* arg)
 		__int64 ID = g_Server->GetSessionID(pSession->m_SessionID);
 		pSession->Clear();
 
-		EnterCriticalSection(&pSession->_cs);
-		LeaveCriticalSection(&pSession->_cs);
+		//EnterCriticalSection(&pSession->_cs);
+		//LeaveCriticalSection(&pSession->_cs);
 
 		// 락프리메모리풀 추가하고 나면 
 		// Session::Free(pSession); 으로 교체
